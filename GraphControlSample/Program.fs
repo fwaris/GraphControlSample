@@ -11,6 +11,7 @@ open AvaloniaGraphControl
 open Avalonia
 open Avalonia.Controls.ApplicationLifetimes
 open Avalonia.Themes.Fluent
+open Avalonia.Controls.Templates
 
 module GraphApp =
     type [<CLIMutable>] Node = {Label:string}
@@ -51,27 +52,28 @@ module GraphApp =
       Viewbox.create [
         Viewbox.child (
           GraphPanel.create [
-            GraphPanel.graph state.graph
-            GraphPanel.itemTemplate (
-                  DataTemplateView<Node>.create (fun (data:Node) ->
-                    TextSticker.create [
-                      TextSticker.shape TextSticker.Shapes.Ellipse
-                      TextSticker.text data.Label
-                    ])                        
-            )
+             GraphPanel.dataTemplates (
+               let ds = DataTemplates()
+               ds.AddRange(
+                 [
+                   DataTemplateView<Node>.create (fun (data:Node) ->
+                     TextSticker.create [
+                       TextSticker.shape TextSticker.Shapes.Ellipse
+                       TextSticker.text data.Label
+                     ])          
+                 ])
+               ds
+               )            
+             GraphPanel.graph state.graph
+            //GraphPanel.itemTemplate (
+            //      DataTemplateView<Node>.create (fun (data:Node) ->
+            //        TextSticker.create [
+            //          TextSticker.shape TextSticker.Shapes.Ellipse
+            //          TextSticker.text data.Label
+            //        ])                        
+            //)
 
-            // GraphPanel.dataTemplates (
-            //   let ds = DataTemplates()
-            //   ds.AddRange(
-            //     [
-            //       DataTemplateView<Node>.create (fun (data:Node) ->
-            //         TextSticker.create [
-            //           TextSticker.shape TextSticker.Shapes.Ellipse
-            //           TextSticker.text data.Label
-            //         ])          
-            //     ])
-            //   ds
-            //   )
+
 
             ]
             )            
